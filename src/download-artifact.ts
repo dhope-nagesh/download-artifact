@@ -52,9 +52,17 @@ async function run(): Promise<void> {
     // output the directory that the artifact(s) was/were downloaded to
     // if no path is provided, an empty string resolves to the current working directory
     core.setOutput(Outputs.DownloadPath, resolvedPath)
+    core.setOutput(Outputs.ArtifactFound, "true")
     core.info('Artifact download has finished successfully')
   } catch (err) {
-    core.setFailed(err.message)
+    const name = core.getInput(Inputs.Name, {required: false})
+    const notFoundErrorString: string = "Unable to find an artifact with the name"
+    if (err.message.includes(notFoundErrorString) && name.trim() !== "") {
+      core.setOutput(Outputs.ArtifactFound, "false")
+      core.warning(err.message)
+    } else {
+      core.setFailed(err.message)
+    }
   }
 }
 

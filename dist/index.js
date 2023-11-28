@@ -9502,6 +9502,7 @@ var Inputs;
 var Outputs;
 (function (Outputs) {
     Outputs["DownloadPath"] = "download-path";
+    Outputs["ArtifactFound"] = "artifact-found";
 })(Outputs = exports.Outputs || (exports.Outputs = {}));
 
 
@@ -9571,10 +9572,19 @@ function run() {
             // output the directory that the artifact(s) was/were downloaded to
             // if no path is provided, an empty string resolves to the current working directory
             core.setOutput(constants_1.Outputs.DownloadPath, resolvedPath);
+            core.setOutput(constants_1.Outputs.ArtifactFound, "true");
             core.info('Artifact download has finished successfully');
         }
         catch (err) {
-            core.setFailed(err.message);
+            const name = core.getInput(constants_1.Inputs.Name, { required: false });
+            const notFoundErrorString = "Unable to find an artifact with the name";
+            if (err.message.includes(notFoundErrorString) && name.trim() !== "") {
+                core.setOutput(constants_1.Outputs.ArtifactFound, "false");
+                core.warning(err.message);
+            }
+            else {
+                core.setFailed(err.message);
+            }
         }
     });
 }

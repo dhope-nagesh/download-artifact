@@ -3,5 +3,6 @@ export enum Inputs {
   Path = 'path'
 }
 export enum Outputs {
-  DownloadPath = 'download-path'
+  DownloadPath = 'download-path',
+  ArtifactFound = 'artifact-found'
 }

@@ -11,6 +11,9 @@ inputs:
 outputs:
   download-path:
     description: 'Path of artifact download'
+  artifact-found:
+    description: 'Set when artifact found'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
